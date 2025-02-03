@@ -1,0 +1,28 @@
+{
+    "general": {
+        "name": "Saikrishna Achalla",
+        "headline": "CS PhD @ UCLA",
+        "email": "saiachalla [at] g [dot] ucla [dot] edu",
+        "about": [
+            "Hi, I'm Sai!"
+        ],
+        "socials": {
+            "email": "saiachalla@g.ucla.edu",
+            "linkedin": "https://www.linkedin.com/in/saikrishna-achalla/",
+            "github": "https://github.com/Saikrishna-Achalla",
+            "twitter": "https://x.com/sachalla3"
+        }
+    },
+    "publications": [
+        {
+            "title": "Wrapping Rings in Lattices: An Algebraic Symbiosis of Incremental View Maintenance and Eventual Consistency",
+            "before_authors": "Conor Power, Saikrishna Achalla, Ryan Cottone, Nathaniel Macasaet, Joseph M. Hellerstein",
+            "href": "https://dl.acm.org/doi/pdf/10.1145/3642976.3653031",
+            "venue": "PaPoC",
+            "year": "2024",
+            "description": "We reconcile the use of semi-lattices in CRDTs and the use of groups and rings in incremental view maintenance to construct systems with strong eventual consistency, incremental computation, and database query optimization."
+        }
+    ],
+    "blog": [
+    ]
+}
