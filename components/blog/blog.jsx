@@ -11,9 +11,6 @@ const Blog = ({ data }) => {
                         <p>{post.description}</p>
                     </div>
                 ))}
-                {(!data || data.length === 0) && (
-                    <p>No blog posts yet. Check back soon!</p>
-                )}
             </div>
         </div>
     );

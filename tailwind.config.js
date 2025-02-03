@@ -10,20 +10,20 @@ module.exports = {
             transparent: "transparent",
             current: "currentColor",
             primary: {
-                100: "#000000",
-                200: "#50C878",
-                300: "#e1e7f0",
+                100: "#ffffff", //First line color
+                200: "#50C878", //hyperlinks color for menu and paper link
+                300: "#e1e7f0", //
                 400: "#66b2b2",
-                500: "#66b2b2",
+                500: "#50C878", //Socials hovering color
                 // 600: "#ffc0a3",
             },
             surface: {
-                100: "#000000",
-                200: "#808080",
+                100: "#ffffff",
+                200: "#454B1B",
                 500: "#d6d5dd",
-                600: "#000000",
+                600: "#ffffff",
             },
-            "on-background": "#000000",//"#e1e7f0",
+            "on-background": "#ffffff",//"#e1e7f0",
         },
         extend: {
             backgroundImage: {
