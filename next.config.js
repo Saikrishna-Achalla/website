@@ -5,6 +5,7 @@ const nextConfig = {
       ...config.resolve.alias,
       '@': '.',
     }
+    // Change for deploying
     return config
   }
 }
