@@ -1,7 +1,12 @@
 import React from "react";
-import Header from "@/components/header";
+import ProfileHeader from "@/components/profile-header";
 import About from "@/components/about";
-import Blog from "@/components/blog/blog";
+import NewsSection from "@/components/news-section";
+import Publications from "@/components/publications/publications";
+import Teaching from "@/components/teaching";
+import Experience from "@/components/experience";
+import Service from "@/components/service";
+import Misc from "@/components/misc";
 import { promises as fs } from "fs";
 
 export default async function Home() {
@@ -12,13 +17,16 @@ export default async function Home() {
     const data = JSON.parse(file);
 
     return (
-        <main className="flex min-h-screen flex-col items-center py-24 px-6 lg:px-24">
-            <div className="z-2 w-full max-w-5xl font-mono text-sm flex flex-col lg:flex-row justify-between">
-                <Header data={data.general}></Header>
-                <div className="lg:pl-[50%]">
-                    <About data={data.general}></About>
-                    <Blog data={data.blog}></Blog>
-                </div>
+        <main className="flex min-h-screen flex-col items-center py-12 px-6">
+            <div className="w-full max-w-3xl">
+                <ProfileHeader data={data.general} />
+                <About data={data.general} />
+                <NewsSection data={data.news} />
+                <Publications data={data.publications} />
+                <Teaching data={data.teaching} />
+                <Experience data={data.experience} />
+                <Service data={data.service} />
+                <Misc data={data.misc} />
             </div>
         </main>
     );

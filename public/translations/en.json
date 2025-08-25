@@ -10,9 +10,24 @@
             "email": "saiachalla@g.ucla.edu",
             "linkedin": "https://www.linkedin.com/in/saikrishna-achalla/",
             "github": "https://github.com/Saikrishna-Achalla",
-            "twitter": "https://x.com/sachalla3"
+            "twitter": "https://x.com/sachalla3",
+            "scholar": "https://scholar.google.com/citations?user=YOUR_ID"
         }
     },
+    "news": [
+        {
+            "date": "Oct 2024",
+            "content": "Started PhD at UCLA!"
+        },
+        {
+            "date": "May 2024",
+            "content": "Paper accepted at PaPoC 2024"
+        },
+        {
+            "date": "May 2024",
+            "content": "Graduated from UC Berkeley"
+        }
+    ],
     "publications": [
         {
             "title": "Wrapping Rings in Lattices: An Algebraic Symbiosis of Incremental View Maintenance and Eventual Consistency",
@@ -23,6 +38,44 @@
             "description": "We reconcile the use of semi-lattices in CRDTs and the use of groups and rings in incremental view maintenance to construct systems with strong eventual consistency, incremental computation, and database query optimization."
         }
     ],
+    "teaching": {
+        "courses": [
+            {
+                "role": "Teaching Assistant",
+                "course": "CS 162 - Operating Systems",
+                "term": "Fall 2023",
+                "institution": "UC Berkeley"
+            }
+        ]
+    },
+    "experience": {
+        "positions": [
+            {
+                "title": "Research Assistant",
+                "company": "Sky Computing Lab",
+                "dates": "2022 - 2024",
+                "location": "Berkeley, CA",
+                "description": "Worked on distributed systems and database research under Prof. Joe Hellerstein"
+            }
+        ]
+    },
+    "service": {
+        "service": [
+            {
+                "role": "Student Volunteer",
+                "venue": "SIGMOD",
+                "year": "2024"
+            }
+        ]
+    },
+    "misc": {
+        "items": [
+            "I enjoy hiking in the California mountains",
+            "Photography enthusiast - mainly landscape and street photography",
+            "Coffee aficionado - always exploring new local roasters",
+            "This site is built with Next.js and Tailwind CSS"
+        ]
+    },
     "blog": [
     ]
 }

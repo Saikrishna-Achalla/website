@@ -3,8 +3,9 @@ import PublicationItem from './publication-item';
 
 const Publications = ({ data }) => {
     return (
-        <div data-section id='publications' className='mb-16 group'>
-            <div className='text-surface-600'>
+        <section className='mb-16'>
+            <h2 className='text-2xl font-bold mb-6'>Research</h2>
+            <div className='space-y-6'>
                 {data && data.map((publication, index) => (
                     <PublicationItem
                         key={index}
@@ -18,10 +19,10 @@ const Publications = ({ data }) => {
                     />
                 ))}
                 {(!data || data.length === 0) && (
-                    <p>No publications available.</p>
+                    <p className='text-gray-500'>No publications yet.</p>
                 )}
             </div>
-        </div>
+        </section>
     );
 };
 
