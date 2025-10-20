@@ -1,0 +1,254 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Learning With Errors (LWE) - Sai Achalla</title>
+    <meta name="author" content="Saikrishna Achalla">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="../images/ucla.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="../stylesheet.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+      /* Blog post specific styles */
+      body {
+        color: #000000;
+      }
+      h1 {
+        line-height: 1.3;
+      }
+      h3 {
+        margin-top: 35px;
+        margin-bottom: 15px;
+        font-size: 21px;
+        color: #000000;
+      }
+      p {
+        line-height: 1.7;
+        margin-bottom: 18px;
+        font-size: 16px;
+      }
+      ul {
+        margin-bottom: 18px;
+        line-height: 1.7;
+        font-size: 16px;
+        color: #000000;
+      }
+      li {
+        margin-bottom: 8px;
+      }
+      pre {
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+        margin: 20px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      a {
+        color: #1772d0;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid #ddd;
+        margin: 40px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+      <tr style="padding:0px">
+        <td style="padding:0px">
+          
+          <!-- Navigation -->
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr style="padding:0px">
+              <td style="padding:20px;width:50%;vertical-align:middle">
+                <p style="margin:0;">
+                  <a href="../index.html" style="color:#1772d0;">← Back to Homepage</a>
+                </p>
+              </td>
+              <td style="padding:20px;width:50%;vertical-align:middle;text-align:right;">
+                <p style="margin:0;">
+                  <a href="index.html" style="color:#1772d0;">All Blog Posts</a>
+                </p>
+              </td>
+            </tr>
+          </tbody></table>
+
+          <!-- Blog Post Content -->
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr>
+              <td style="padding:20px;width:100%;vertical-align:middle">
+                <h1 style="font-size:32px; margin-bottom:10px; text-align:center;">
+                  Learning With Errors (LWE)
+                </h1>
+                <p style="text-align:center; color:#666; margin-bottom:30px;">
+                  <em>October 20, 2025</em>
+                </p>
+                
+                <br>
+                <p>
+                  LWE is a mathematical problem that is used as the foundation of many cryptographic protocols, especially 
+                  post-quantum cryptography. While public cryptographic schemes such as RSA<a href="https://en.wikipedia.org/wiki/RSA_cryptosystem"><sup>[1]</sup></a> 
+                  can potentially be broken under conditions ideal to Shor's algorithm<a href="https://en.wikipedia.org/wiki/Shor%27s_algorithm"><sup>[2]</sup></a>, 
+                  which runs in polynomial time on a quantum computer with sufficient number of qubits, LWE remains unbroken because it's based on lattice problems that 
+                  even quantum computers can't effeciently solve.
+                </p>
+
+                <u><h3>Formalization</h3></u>
+                <b>Notation:</b>
+                </p>
+                <ul>
+                  <li>\(\mathbb{Z}_q = \{0,1,2,\cdots,q-1\} \)</li>
+                  <li>\(x \in_R S \) means that \(x\) is selected uniformly and independently at random from \(S\)</li>
+                </ul>
+
+                <p>
+                  <u><b>Definitions:</b></u>
+                </p>
+                <ul>
+                  <li>\(s \in_R \mathbb{Z}^n_q \) is the secret message to be shared</li>
+                  <li>\(e \in_R [-B,B]^m \) where \(B \ll q/2 \)  is the error</li>
+                  <li>\(A \in_R \mathbb{Z}^{m \times n}_q \)</li>
+                  <li>\(b = As + e \pmod q \in \mathbb{Z}^m_q \)</li>
+                </ul>
+
+                <p>
+                  Given these definitions, LWE is defined as solving for the secret, \(s\), in the equation below:
+                </p>
+
+                <p style="text-align: center; font-size: 18px; margin: 25px 0;">
+                  \[A\vec{s} + \vec{e} = \vec{b}\]
+                </p>
+
+                <p>
+                    Recall that the form of the equation without the error, \(A\vec{s} = \vec{b}\), can be solved easily using gaussian elimination<a href="https://en.wikipedia.org/wiki/Gaussian_elimination"><sup>[3]</sup></a>
+                    given that \(m > n\).
+                </p>
+
+                <u><h3>Choosing the error bound</h3></u>
+                <p>
+                  Choosing a good error bound is very important because LWE relies on the introduction of errors. If the error bound is too large, 
+                  decryption becomes difficult since it hard difficult to separate the error from the message even for a legitimate recepient. If 
+                  the error bound is too small, it has been shown that LWE can be solved in subexponential time<a href="https://users.cs.duke.edu/~rongge/LPSN.pdf"><sup>[4]</sup></a>
+                  given a few other conditions hold true.
+                </p>
+                <p>
+                  Here's an intuitive way of thinking about choosing an error bound that balances both security and decryption reliability. Think of the modulo 
+                  space as a circle shown below.
+                </p>
+                <p style="text-align: center; margin: 10px 0;">
+                  <img src="../blog/images/lwe/choosing_b.png" alt="Figure 1: Circle of mod q" style="max-width: 50%; height: auto;">
+                </p>
+                <p style="text-align: center; color: #666; font-size: 14px; margin-top: -15px; margin-bottom: 30px;">
+                  <em>Figure 1: Intuitive way of looking at the mod operation and ideal error bound selection.</em>
+                </p>
+                <p>
+                  Imagine you want to send a binary message \(\mu \in \{0,1\}\) using LWE. Let's say we "encode" bit 0 near 0 and "encode" bit 1 near \((q-1)/2\) and then add an 
+                  error \(e\) to it, we obtain \(\mu \cdot \lfloor{q/2}\rfloor + e\). Putting this together with the LWE equation, the sender will construct
+                  \(As + \mu \cdot \lfloor{q/2}\rfloor + e = b\) since they have the secret key, \(s\) and send it to the recepient. The recepient will then compute 
+                  \(v = \mu \cdot \lfloor{q/2}\rfloor + e = b - As\) since they have the secret key as well. Now, in order to figure out the value of \(\mu\), the recepient simply looks where 
+                  \(v\) lies in the circle shown in figure 1. If it's in the pink region, then \(\mu = 0\) and if it's in the green region, \(\mu = 1\). Notice that this is only possible if \(|e| \lt (q-1)/4\). 
+                  Therefore, \(B = (q-1)/4\) is the most ideal value for the error bound.
+                </p>
+
+                <u><h3>Uniqueness of the LWE solution</h3></u>
+                <p>
+                  Having multiple solutions to an LWE problem is an issue since it gives an adversary the opportunity to guess one of the correct solutions. Therefore, LWE assumes 
+                  that \(m \gg n\), which in turn means that the probability of having more than one solution is negligible. This implication becomes more intuitive by looking at the 
+                  diagram below:
+                </p>
+
+                <p style="text-align: center; margin: 30px 0;">
+                  <img src="../blog/images/lwe/uniqueness.png" alt="Figure 1: Lattice points with error regions" style="max-width: 100%; height: auto;">
+                </p>
+                <p style="text-align: center; color: #666; font-size: 14px; margin-top: -15px; margin-bottom: 30px;">
+                  <em>Figure 2: Transformation visualized to depict uniqueness assumption</em>
+                </p>
+
+                <p>
+                  Figure 2 shows the transformation that occurs when moving from \(s \in \mathbb{Z}^n_q\) to \(As \pmod q  \in \mathbb{Z}^m_q\). Given that 
+                  the value of \(s_i\) has \(q\) possible values, there are a total of \(q^n\) transformed points in \(\mathbb{Z}^m_q\). Therefore, there are 
+                  \(q^n\) spheres of dimension \(m\) centered around these transformed points. The uniqueness of the LWE solution is only guaranteed if no two
+                  of the \(q^n\) spheres overlap. If we assume \(m \gg n \), and that the centers of these spheres are selected at random, 
+                  then we can say that the probability of two spheres overlapping is very small, hence the probability of a unique solution is very high.
+                </p>
+
+                <u><h3>Hardness of LWE</h3></u>
+                <p>
+                  The hardness of LWE boils down to the Closest Vector Problem (CVP) - a lattice problem that is NP-complete. A lattice is defined as a set of points 
+                  \(L = \{a_1v_1 + a_2v_2 + \cdots + a_nv_n | a_i \in \mathbb{Z}\}\) for linearly independent vectors \(v_1 \cdots v_n \in \mathbb{R}^n\) that 
+                  form the basis of \(L\). The basis of a lattice is not unique and this helps to hide its structure since two different basis 
+                  vectors can yield the same lattice. 
+                </p>
+
+                <p>
+                  <u><b>Definition of CVP</b></u>
+                </p>
+
+                <p>
+                  Given a lattice \(L \in \mathbb{Z}^m_q\), a target vector \(t \in \mathbb{Z}^m_q\), where \(t \notin L\), find a lattice vector 
+                  \(v \in L\) such that: 
+                </p>
+
+                <p style="text-align: center; font-size: 18px; margin: 25px 0;">
+                  \[v = \arg \min_{u \in L} ||t - u ||\]
+                </p>
+
+                <p>
+                  CVP is quantum-safe as there is no polynomial time algorithm developed yet to solve it. By extension, LWE is quantum-safe. The hardness of LWE is also based on the added 
+                  error itself. As assumed by some formulations of the problem, even if there is an oracle which emits new equations every time it's 
+                  asked, increasing the value of \(m\) does not increase the amount of information in the system because the error in the equations is 
+                  always random. This is why, even with unlimited equations, possibly being provided by an oracle, LWE remains hard<a href="https://www.cs.columbia.edu/~tal/6261/SP13/LWE-hardness.pdf"><sup>[5]</sup></a>
+                </p>
+
+
+
+                <!-- Side-by-side figures
+                <table style="width:100%; border:0px; border-spacing:20px; margin: 30px auto;">
+                  <tr>
+                    <td style="width:50%; text-align:center; vertical-align:top;">
+                      <img src="images/lwe/lattices.png" alt="Figure 3: Lattice structure" style="max-width: 100%; height: auto;">
+                      <p style="color: #666; font-size: 14px; margin-top: 10px;">
+                        <em>Figure 3: Lattice structure with basis vectors and error circle around each point</em>
+                      </p>
+                    </td>
+                    <td style="width:50%; text-align:center; vertical-align:top;">
+                      <img src="images/lwe/single_point.png" alt="Figure 4: Single point in lattice" style="max-width: 100%; height: auto;">
+                      <p style="color: #666; font-size: 14px; margin-top: 10px;">
+                        <em>Figure 4: Target point and closest lattice vector</em>
+                      </p>
+                    </td>
+                  </tr>
+                </table> -->
+
+
+
+                
+                <hr>
+                
+                <p style="color: #666;">
+                  Acknowledgments:
+                </p>
+                <ul>
+                  <li><a href="https://cims.nyu.edu/~regev/teaching/lattices_fall_2004/ln/cvp.pdf">Babai's nearest plane algorithm for CVP</a></li>
+                  <li><a href="https://www.isa-afp.org/browser_info/current/AFP/CVP_Hardness/outline.pdf">NP-hardness of CVP and SVP</a></li>
+                  <li><a href="https://courses.grainger.illinois.edu/cs598dk/fa2019/Files/lecture10.pdf">Encryption from Learning with Errors</a></li>
+                  <li><a href="https://www.youtube.com/@cryptography101-alfred">Cryptography 101</a></li>
+                </ul>
+              </td>
+            </tr>
+          </tbody></table>
+          
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
