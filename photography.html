@@ -1,0 +1,394 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Photography - Sai Achalla</title>
+    <meta name="author" content="Saikrishna Achalla">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="images/ucla.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+
+    <style>
+      /* Photography-specific styles */
+      body {
+        background-color: #ffffff;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-container {
+        margin: 0;
+        padding: 20px 0;
+        text-align: center;
+      }
+
+      .nav-link {
+        color: #1772d0;
+        text-decoration: none;
+        font-size: 16px;
+      }
+
+      .nav-link:hover {
+        color: #f09228;
+      }
+
+      .page-title {
+        font-family: 'Lato', Verdana, Helvetica, sans-serif;
+        font-size: 32px;
+        font-weight: 400;
+        text-align: center;
+        margin: 30px 0 40px 0;
+      }
+
+      /* Photo grid container */
+      .photo-grid {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+      }
+
+      /* Individual photo item */
+      .photo-item {
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 1 / 1;
+      }
+
+      .photo-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+        display: block;
+      }
+
+      .photo-item:hover img {
+        transform: scale(1.05);
+      }
+
+      /* Photo caption */
+      .photo-caption {
+        font-family: 'Lato', Verdana, Helvetica, sans-serif;
+        font-size: 13px;
+        color: #666;
+        text-align: center;
+        margin-top: 8px;
+        line-height: 1.4;
+      }
+
+      /* Lightbox styles */
+      .lightbox {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.95);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .lightbox.active {
+        display: flex;
+      }
+
+      .lightbox-content {
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .lightbox-image {
+        max-width: 100%;
+        max-height: 80vh;
+        object-fit: contain;
+      }
+
+      .lightbox-caption {
+        color: #ffffff;
+        font-family: 'Lato', Verdana, Helvetica, sans-serif;
+        font-size: 16px;
+        text-align: center;
+        margin-top: 20px;
+        max-width: 600px;
+      }
+
+      .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-size: 40px;
+        font-weight: bold;
+        color: #ffffff;
+        cursor: pointer;
+        z-index: 10000;
+        background: none;
+        border: none;
+        padding: 0;
+        line-height: 1;
+      }
+
+      .lightbox-close:hover {
+        color: #f09228;
+      }
+
+      .lightbox-prev,
+      .lightbox-next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 40px;
+        font-weight: bold;
+        color: #ffffff;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 20px;
+        z-index: 10000;
+      }
+
+      .lightbox-prev:hover,
+      .lightbox-next:hover {
+        color: #f09228;
+      }
+
+      .lightbox-prev {
+        left: 20px;
+      }
+
+      .lightbox-next {
+        right: 20px;
+      }
+
+      /* Responsive design */
+      @media (max-width: 992px) {
+        .photo-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .photo-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0;
+        }
+
+        .page-title {
+          font-size: 24px;
+        }
+
+        .lightbox-prev,
+        .lightbox-next {
+          font-size: 30px;
+          padding: 10px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .photo-grid {
+          grid-template-columns: 1fr;
+          padding: 0;
+          gap: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    <div class="nav-container">
+      <a href="index.html" class="nav-link">← Back to Homepage</a>
+    </div>
+
+    <!-- Photo Grid -->
+    <div class="photo-grid">
+
+      <div class="photo-item" onclick="openLightbox(0)">
+        <img src="images/photography/two_cheetahs.JPG" alt="Photo 1">
+        <div class="photo-caption">Two male cheetahs sitting on top of a mound in Savuti (a part of Chobe national park). 
+          If two males are ever seen together, it's assumed they are family (brothers in this case).
+        </div>
+      </div>
+
+
+      <div class="photo-item" onclick="openLightbox(2)">
+        <img src="images/photography/sleeping_lion.jpeg" alt="Photo 3">
+        <div class="photo-caption">Isn't he majestic! This is Sekuti, the oldest of four brothers. He has since passed but he was a warrior, fending off 
+          males from other prides and even his own brothers for a long time!
+        </div>
+      </div>
+
+
+      <div class="photo-item" onclick="openLightbox(1)">
+        <img src="images/photography/giraffe.JPG" alt="Photo 2">
+        <div class="photo-caption">Your average giraffe. I have never been able to take a proper full body shot of a giraffe so the trees in this 
+          picture give me a great excuse for having captured only the neck and above!
+        </div>
+      </div>
+
+
+      <div class="photo-item" onclick="openLightbox(3)">
+        <img src="images/photography/leopard.JPG" alt="Photo 4">
+        <div class="photo-caption">Female leopard marking its territory. Tracking this beast was an absolute blast - the sound of guinea fowl plus 
+          tracking footprints made for an exhilerating experience!
+        </div>
+      </div>
+
+
+      <div class="photo-item" onclick="openLightbox(4)">
+        <img src="images/photography/wildbeast.JPG" alt="Photo 4">
+        <div class="photo-caption">Female blue wildebeest nursing its young. This was taken opposite where the two cheetahs were sitting on the mound. 
+          Now you know what they were looking out at!
+        </div>
+      </div>
+
+
+      <div class="photo-item" onclick="openLightbox(5)">
+        <img src="images/photography/waterbuck.JPG" alt="Photo 4">
+        <div class="photo-caption">Male waterbuck. As the name suggests, the cannot deal with dehydration so always stay close to a body of water - 
+          in this case, the chobe river.
+        </div>
+      </div>
+
+
+      <div class="photo-item" onclick="openLightbox(6)">
+        <img src="images/photography/lilac_breasted_roller.jpeg" alt="Photo 4">
+        <div class="photo-caption">This is a lilac breasted roller - so many colors and even more beautiful when flying 
+          as the underbelly is exposed.
+        </div>
+      </div>
+
+
+      <div class="photo-item" onclick="openLightbox(7)">
+        <img src="images/photography/sunset.JPG" alt="Photo 4">
+        <div class="photo-caption">Typical African Sunset.
+        </div>
+      </div>
+
+      <!-- Add more photos following this pattern:
+      <div class="photo-item" onclick="openLightbox(INDEX)">
+        <img src="images/photography/YOUR_PHOTO.jpg" alt="Description">
+        <div class="photo-caption">Your caption describing the setting</div>
+      </div>
+
+      Remember to:
+      1. Increment the INDEX in openLightbox() for each new photo
+      2. Update the src path to your image
+      3. Add a meaningful caption describing the setting
+      -->
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightboxOnBackground(event)">
+      <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+      <button class="lightbox-prev" onclick="changeImage(-1)">&#10094;</button>
+      <div class="lightbox-content">
+        <img class="lightbox-image" id="lightbox-img" src="" alt="">
+        <div class="lightbox-caption" id="lightbox-caption"></div>
+      </div>
+      <button class="lightbox-next" onclick="changeImage(1)">&#10095;</button>
+    </div>
+
+    <script>
+      // Photo data array
+      const photos = [
+        {
+          src: 'images/photography/two_cheetahs.JPG',
+          caption: 'Two male cheetahs sitting on top of a mound in Savuti (a part of Chobe national park). If two males are ever seen together, it\'s assumed they are family (brothers in this case). What are they looking at? Check one of the other images.'
+        },
+        {
+          src: 'images/photography/giraffe.JPG',
+          caption: 'Your average giraffe. I have never been able to take a proper full body shot of a giraffe so the trees in this picture give me a great excuse for having captured only the neck and above!'
+        },
+        {
+          src: 'images/photography/sleeping_lion.jpeg',
+          caption: 'Isn\'t he majestic! This is Sekuti, the oldest of four brothers. He has since passed but he was a warrior, fending off males from other prides and even his own brothers for a long time!'
+        },
+        {
+          src: 'images/photography/leopard.JPG',
+          caption: 'Female leopard marking its territory. Tracking this beast was an absolute blast - the sound of guinea fowl plus tracking footprints made for an exhilerating experience!'
+        },
+        {
+          src: 'images/photography/wildbeast.JPG',
+          caption: 'Female blue wildebeest nursing its young. This was taken opposite where the two cheetahs were sitting on the mound. Now you know what they were looking out at!'
+        },
+        {
+          src: 'images/photography/waterbuck.JPG',
+          caption: 'Male waterbuck. As the name suggests, the cannot deal with dehydration so always stay close to a body of water - in this case, the chobe river.'
+        },
+        {
+          src: 'images/photography/lilac_breasted_roller.jpeg',
+          caption: 'This is a lilac breasted roller - so many colors and even more beautiful when flying as the underbelly is exposed.'
+        },
+        {
+          src: 'images/photography/sunset.JPG',
+          caption: 'Typical African Sunset.'
+        }
+        // Add more photo objects as you add photos to the grid above
+      ];
+
+      let currentImageIndex = 0;
+
+      function openLightbox(index) {
+        currentImageIndex = index;
+        updateLightboxImage();
+        document.getElementById('lightbox').classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+      }
+
+      function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('active');
+        document.body.style.overflow = 'auto'; // Restore scrolling
+      }
+
+      function closeLightboxOnBackground(event) {
+        if (event.target === document.getElementById('lightbox')) {
+          closeLightbox();
+        }
+      }
+
+      function changeImage(direction) {
+        currentImageIndex += direction;
+
+        // Loop around if at ends
+        if (currentImageIndex < 0) {
+          currentImageIndex = photos.length - 1;
+        } else if (currentImageIndex >= photos.length) {
+          currentImageIndex = 0;
+        }
+
+        updateLightboxImage();
+      }
+
+      function updateLightboxImage() {
+        const photo = photos[currentImageIndex];
+        document.getElementById('lightbox-img').src = photo.src;
+        document.getElementById('lightbox-caption').textContent = photo.caption;
+      }
+
+      // Keyboard navigation
+      document.addEventListener('keydown', function(event) {
+        const lightbox = document.getElementById('lightbox');
+        if (lightbox.classList.contains('active')) {
+          if (event.key === 'Escape') {
+            closeLightbox();
+          } else if (event.key === 'ArrowLeft') {
+            changeImage(-1);
+          } else if (event.key === 'ArrowRight') {
+            changeImage(1);
+          }
+        }
+      });
+    </script>
+
+  </body>
+</html>
