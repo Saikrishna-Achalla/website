@@ -11,7 +11,6 @@
     <style>
       /* Photography-specific styles */
       body {
-        background-color: #ffffff;
         margin: 0;
         padding: 0;
       }
@@ -23,21 +22,22 @@
       }
 
       .nav-link {
-        color: #1772d0;
+        color: var(--link);
         text-decoration: none;
         font-size: 16px;
       }
 
       .nav-link:hover {
-        color: #f09228;
+        color: var(--link-hover);
       }
 
       .page-title {
-        font-family: 'Lato', Verdana, Helvetica, sans-serif;
+        font-family: var(--font-main);
         font-size: 32px;
-        font-weight: 400;
+        font-weight: 700;
         text-align: center;
         margin: 30px 0 40px 0;
+        color: var(--accent);
       }
 
       /* Photo grid container */
@@ -72,9 +72,9 @@
 
       /* Photo caption */
       .photo-caption {
-        font-family: 'Lato', Verdana, Helvetica, sans-serif;
+        font-family: var(--font-main);
         font-size: 13px;
-        color: #666;
+        color: var(--text-muted);
         text-align: center;
         margin-top: 8px;
         line-height: 1.4;

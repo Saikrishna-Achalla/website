@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Analyzing write-write conflicts under the context of snapshot isolation - Sai Achalla</title>
+    <meta name="author" content="Saikrishna Achalla">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="../images/ucla.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="../stylesheet.css">
+    <style>
+      /* Blog post specific styles */
+      h1 {
+        line-height: 1.3;
+      }
+      h3 {
+        margin-top: 35px;
+        margin-bottom: 15px;
+        font-size: 21px;
+        color: var(--text-primary);
+      }
+      p {
+        line-height: 1.7;
+        margin-bottom: 18px;
+        font-size: 16px;
+      }
+      ul {
+        margin-bottom: 18px;
+        line-height: 1.7;
+        font-size: 16px;
+      }
+      li {
+        margin-bottom: 8px;
+      }
+      pre {
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+        margin: 20px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      a {
+        color: var(--link);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid #ddd;
+        margin: 40px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+      <tr style="padding:0px">
+        <td style="padding:0px">
+          
+          <!-- Navigation -->
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr style="padding:0px">
+              <td style="padding:20px;width:50%;vertical-align:middle">
+                <p style="margin:0;">
+                  <a href="../index.html" style="color:var(--link);">← Back to Homepage</a>
+                </p>
+              </td>
+              <td style="padding:20px;width:50%;vertical-align:middle;text-align:right;">
+                <p style="margin:0;">
+                  <a href="index.html" style="color:var(--link);">All Blog Posts</a>
+                </p>
+              </td>
+            </tr>
+          </tbody></table>
+
+          <!-- Blog Post Content -->
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr>
+              <td style="padding:20px;width:100%;vertical-align:middle">
+                <h1 style="font-size:32px; margin-bottom:10px; text-align:center;">
+                  Analyzing write-write conflicts under the context of snapshot isolation
+                </h1>
+                <p style="text-align:center; color:var(--text-muted); margin-bottom:30px;">
+                  <em>August 30, 2025 · 8 min read</em>
+                </p>
+                
+                <br>
+                <p>
+                  During my internship at MongoDB this summer, I had the opportunity to dive deep into transaction isolation levels. One 
+                  interesting area I looked into further is how snapshot isolation is implemented and the role write-write conflicts play in it. 
+                </p>
+
+                <h3>What is Snapshot Isolation?</h3>
+                <p>
+                  Snapshot isolation is a concurrency control mechanism that provides each transaction with a consistent snapshot 
+                  of the database at the start of the transaction. This means that a transaction sees the database as it existed 
+                  at a specific point in time, regardless of concurrent modifications by other transactions. Transactions read from this 
+                  consistent snapshot and depending on the implementation, write to local memory before commiting all changes to the database.
+                  This is a form of optimistic concurrency control (no locking involved) and so it offers an attractive tradeoff between 
+                  application safety and performance.
+                </p>
+
+                <h3>The Lost Update Anomaly</h3>
+                <p>
+                  
+                </p>
+                
+                <p>
+                  The key properties of snapshot isolation are:
+                </p>
+                <ul>
+                  <li><strong>Read consistency</strong> - All reads within a transaction see the same snapshot</li>
+                  <li><strong>No dirty reads</strong> - Transactions never see uncommitted changes</li>
+                  <li><strong>No lost updates</strong> - Concurrent writes to the same data are detected</li>
+                </ul>
+
+                <h3>Write-Write Conflicts in Practice</h3>
+                <p>
+                  When two transactions attempt to modify the same document in MongoDB, the system must decide how to handle 
+                  this conflict. Under snapshot isolation, MongoDB uses a "first-committer-wins" rule: the first transaction 
+                  to commit succeeds, while the second transaction is aborted with a write conflict error.
+                </p>
+                
+                <p>
+                  Consider this example with two concurrent transactions:
+                </p>
+                <pre style="background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto;">
+Transaction T1:                    Transaction T2:
+BEGIN                              BEGIN
+READ balance = $100               READ balance = $100
+UPDATE balance = $150              UPDATE balance = $200
+COMMIT (succeeds)                  COMMIT (fails - write conflict)
+                </pre>
+
+                <h3>Alternative Approaches to Conflict Resolution</h3>
+                <p>
+                  While researching this topic, I explored several alternative definitions and implementations of snapshot isolation 
+                  across different database systems:
+                </p>
+                <ul>
+                  <li><strong>Optimistic concurrency control</strong> - Validate at commit time</li>
+                  <li><strong>Multi-version concurrency control (MVCC)</strong> - Maintain multiple versions of data</li>
+                  <li><strong>Timestamp ordering</strong> - Use timestamps to order conflicting operations</li>
+                </ul>
+
+                <h3>Implications for Application Design</h3>
+                <p>
+                  Understanding these isolation levels is crucial for building robust distributed applications. Developers need to:
+                </p>
+                <ul>
+                  <li>Design for retry logic when conflicts occur</li>
+                  <li>Consider using application-level locking for critical sections</li>
+                  <li>Choose appropriate isolation levels based on consistency requirements</li>
+                  <li>Understand the trade-offs between consistency and performance</li>
+                </ul>
+
+                <h3>Future Research Directions</h3>
+                <p>
+                  This work has opened up several interesting research questions that I'm excited to explore further in my PhD:
+                  How can we provide stronger consistency guarantees without sacrificing performance? Can we develop adaptive 
+                  isolation levels that adjust based on workload patterns? These are the kinds of problems that make distributed 
+                  systems research so fascinating.
+                </p>
+                
+                <hr>
+                
+                <p style="color: var(--text-muted);">
+                  <em>Thanks to Will Schultz and the MongoDB team for mentoring me during this research. If you're interested 
+                  in discussing transaction isolation or distributed systems, feel free to reach out!</em>
+                </p>
+              </td>
+            </tr>
+          </tbody></table>
+          
+          
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
