@@ -143,7 +143,16 @@ h2 {
   font-family: var(--font-main);
   font-size: 14px;
   font-weight: 700;
-  color: var(--link);
+  color: #86efac;
+}
+
+a .papertitle,
+a:hover .papertitle {
+  color: #86efac;
+}
+
+a:hover .papertitle {
+  color: #bbf7d0;
 }
 
 .name {
