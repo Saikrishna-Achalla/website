@@ -253,7 +253,7 @@
                     <a href="https://ieeexplore.ieee.org/document/9499894">HBM-PIM</a>, SK hynix's
                     <a href="https://ieeexplore.ieee.org/document/9731711">GDDR6-AiM</a>, Samsung's
                     <a href="https://ieeexplore.ieee.org/document/10477465">LPDDR5-PIM</a> and
-                    <a href="https://arxiv.org/abs/2105.03814">UPMEM's PIM DIMMs</a>.</li>
+                    <a href="https://arxiv.org/abs/2105.03814">UPMEM's PIM DIMMs</a>. Figure 2 below shows an example of a circuit that completes the multiply-accumulate (MAC) operation in SK hynix's AiM. Each 32-byte column read gives the processing unit 16 BF16 weights. Its 16 multipliers multiply them with 16 values of the input vector from the shared global buffer, so the full column read is used in a single step. An adder tree sums the 16 products together, the accumulator adds that to a running total across column reads and only the final result is sent to the GPU.</li>
                 </ul>
 
                 <p style="text-align: center; margin: 30px 0;">
