@@ -1,0 +1,366 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>The Von-Neumann Bottleneck and Moving Compute to Data - Sai Achalla</title>
+    <meta name="author" content="Saikrishna Achalla">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="../images/ucla.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="../stylesheet.css">
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+      /* Blog post specific styles */
+      h1 {
+        line-height: 1.3;
+      }
+      h3 {
+        margin-top: 35px;
+        margin-bottom: 15px;
+        font-size: 21px;
+      }
+      p {
+        line-height: 1.7;
+        margin-bottom: 18px;
+        font-size: 16px;
+      }
+      ul {
+        margin-bottom: 18px;
+        line-height: 1.7;
+        font-size: 16px;
+      }
+      li {
+        margin-bottom: 8px;
+        font-size: 16px;
+      }
+      li strong {
+        font-size: inherit;
+      }
+      pre {
+        background: rgba(255, 255, 255, 0.06);
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+        margin: 20px 0;
+        font-family: 'Fira Code', 'Courier New', monospace;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--text-primary);
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      sup a,
+      sup a:visited,
+      .ack-list a,
+      .ack-list a:visited {
+        color: #4a9eff;
+      }
+      sup a:hover,
+      .ack-list a:hover {
+        color: #82bfff;
+      }
+      table.data {
+        border-collapse: collapse;
+        margin: 30px auto 0;
+        font-size: 15px;
+      }
+      table.data th,
+      table.data td {
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 8px 14px;
+        text-align: left;
+      }
+      table.data th {
+        background: rgba(255, 255, 255, 0.06);
+        font-weight: 600;
+      }
+      table.data td:not(:first-child) {
+        font-variant-numeric: tabular-nums;
+      }
+      .table-wrap {
+        overflow-x: auto;
+      }
+      /* Sidenotes: in the right margin on wide screens, shown inline when clicked on narrow ones */
+      .sidenote-ref a {
+        text-decoration: none;
+        padding: 0 1px;
+      }
+      .sidenote {
+        float: right;
+        clear: right;
+        width: 220px;
+        margin-right: -270px;
+        margin-top: 4px;
+        font-size: 12px;
+        line-height: 1.45;
+        color: var(--text-muted);
+        border-left: 2px solid transparent;
+        padding-left: 8px;
+        transition: border-color 0.3s;
+      }
+      .sidenote-num {
+        display: block;
+        font-size: 11px;
+        color: #4a9eff;
+        margin-bottom: 2px;
+      }
+      .sidenote:target,
+      .sidenote.active {
+        border-left-color: #4a9eff;
+      }
+      @media (max-width: 1340px) {
+        .sidenote {
+          display: none;
+          float: none;
+          width: auto;
+          margin: 8px 0 4px;
+        }
+        .sidenote:target,
+        .sidenote.active {
+          display: block;
+        }
+      }
+      hr {
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        margin: 40px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+      <tr style="padding:0px">
+        <td style="padding:0px">
+
+          <!-- Navigation -->
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr style="padding:0px">
+              <td style="padding:20px;width:50%;vertical-align:middle">
+                <p style="margin:0;">
+                  <a href="../index.html" style="color:var(--link);">← Back to Homepage</a>
+                </p>
+              </td>
+              <td style="padding:20px;width:50%;vertical-align:middle;text-align:right;">
+                <p style="margin:0;">
+                  <a href="index.html" style="color:var(--link);">All Blog Posts</a>
+                </p>
+              </td>
+            </tr>
+          </tbody></table>
+
+          <!-- Blog Post Content -->
+          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr>
+              <td style="padding:20px;width:100%;vertical-align:middle">
+                <h1 style="font-size:32px; margin-bottom:10px; text-align:center;">
+                  The Von-Neumann Bottleneck and Moving Compute to Data
+                </h1>
+                <p style="text-align:center; color:var(--text-muted); margin-bottom:30px;">
+                  <em>November 15, 2026</em>
+                </p>
+
+                <blockquote style="max-width:620px; margin:10px auto 30px; text-align:center;">
+                  <p style="font-style:italic; margin-bottom:10px;">
+                    "Not only is this tube [between processor and memory] a literal bottleneck for the data traffic a problem, but, more importantly, it is
+                    an intellectual bottleneck that has kept us tied to word-at-a-time thinking instead of encouraging us to think in
+                    terms of the larger conceptual units of the task at hand."
+                  </p>
+                  <p style="font-size:14px; color:var(--text-muted); margin:0;">
+                    &mdash; John Backus on the von Neumann bottleneck, 1977 Turing Award Lecture
+                  </p>
+                </blockquote>
+
+                <br>
+                <p>
+                  Backus was making a point about programming languages, but his framing also describes the two ways we make programs faster:
+                </p>
+                <ol style="margin-bottom:18px; line-height:1.7; font-size:16px;">
+                  <li><strong>Reduce the work.</strong> Improve a program’s algorithms to compute less and move less data</li>
+                  <li><strong>Move data faster.</strong> Increase the rate at which data travels between memory and the processor</li>
+                </ol>
+                <p>
+                  The first is limited by mathematics: there is a certain amount of minimum computation and data accesses needed to solve a problem.
+                  The second is limited by physics: I/O pins at the chip's edge, the wiring density on the package and much more.
+                </p>
+                <p>
+                  High Bandwidth Memory (HBM) shows the bottleneck clearly. Each HBM generation has increased the bandwidth of the memory to
+                  processor interconnect but the banks inside the stacks can supply far more data than the interconnect can carry. Since HBM2,
+                  the banks’ combined bandwidth has been roughly eight times the external bandwidth (Table 1).
+                </p>
+
+                <div class="table-wrap">
+                  <table class="data">
+                    <thead>
+                      <tr><th>HBM Generation</th><th>Interface width (bits)</th><th>External Bandwidth (TB/s)</th><th>Internal Bandwidth (TB/s)</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>HBM1</td><td>1024</td><td>0.128</td><td>0.51</td></tr>
+                      <tr><td>HBM2</td><td>1024</td><td>0.256</td><td>2.05</td></tr>
+                      <tr><td>HBM2E</td><td>1024</td><td>0.41&ndash;0.46</td><td>3.28&ndash;3.69</td></tr>
+                      <tr><td>HBM3</td><td>1024</td><td>0.819</td><td>6.55</td></tr>
+                      <tr><td>HBM3E</td><td>1024</td><td>1.18&ndash;1.23</td><td>9.44&ndash;9.83</td></tr>
+                      <tr><td>HBM4</td><td>2048</td><td>2</td><td>16.4</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p style="text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 12px; margin-bottom: 30px;">
+                  <em>Table 1: External (interface) vs. internal (combined bank) bandwidth per HBM stack</em>
+                </p>
+
+                <u><h3>Inside an HBM4 stack</h3></u>
+                <p>
+                  Figure 1 shows the different structures inside an HBM4 stack. The stack is a tower of 4&ndash;16 DRAM dies
+                  sitting on a base die. The dies are connected vertically by through-silicon vias (TSVs), which are wires that run
+                  straight through the silicon and sit next to the GPU on a silicon interposer. This contains the 2,048 data wires
+                  between them meaning 2,048 bits move between the stack and the GPU in every beat<sup class="sidenote-ref"><a href="#sn-beat" id="sn-beat-ref">1</a></sup>.<span class="sidenote" id="sn-beat"><span class="sidenote-num">[1]</span>A beat is a single transfer on the data wires, in which each wire carries one bit. HBM transfers data on both the rising and falling edges of the clock, so one clock cycle equals 2 beats.</span>
+                </p>
+
+                <p style="text-align: center; margin: 30px 0;">
+                  <img src="images/pim/hbm.png" alt="Figure 1: An HBM4 stack beside the GPU on a silicon interposer with 2,048 wires; one of 32 DRAM die channels, split into two pseudo-channels of 16 banks in two bank groups, each pseudo-channel with 32 pins carrying 4 B per beat; and one bank, where activating a row latches it into a 1 KB row buffer and a 32 B column read goes to the pin." style="max-width: 100%; height: auto;">
+                </p>
+                <p style="text-align: center; color: var(--text-muted); font-size: 14px; margin-top: -15px; margin-bottom: 30px;">
+                  <em>Figure 1: Breakdown of an HBM4 stack</em>
+                </p>
+                <p>
+                  The stack's interface is split into independent channels (32 in HBM4), each 64 bits wide (32 &times; 64 = 2,048). Each
+                  channel is further split into two 32-bit pseudo-channels, and each pseudo-channel has 16 banks each consisting of a grid of DRAM cells arranged in rows and columns.
+                  This means, every beat, a maximum of 4 bytes (32 bits) can be transferred from a single pseudo-channel. A read from a bank is done in the following stages:
+                </p>
+                <ol style="margin-bottom: 18px; line-height: 1.7; font-size: 16px;">
+                  <li><strong>Activate (ACT):</strong> the memory controller opens one row, and the entire row (1 KB) is copied from
+                    the cells into the bank's row buffer.</li>
+                  <li><strong>Read (RD):</strong> the controller selects a column in the row buffer, and that column's 32 bytes are
+                    sent out to the pins over 8 beats (4 bytes per beat). Future reads from the same open row skip the activate step (similar to caching).</li>
+                  <li><strong>Precharge (PRE):</strong> the row is closed and written back to the cells, so the bank is ready to open
+                    a different row.</li>
+                </ol>
+                <p>
+                  Every column read from a bank's row buffer returns 32 bytes but since only 4 bytes can leave the pseudo-channel per beat, sending a
+                  single column read to the GPU takes 8 beats, or 4 clock cycles. All 16 banks in a pseudo-channel can have a row open at
+                  the same time, so 16 &times; 32 = 512 bytes can theoretically be used, but we end up being memory-bound because of the
+                  number of pins per pseudo-channel.
+                </p>
+
+                <u><h3>Moving compute to the data: PIM and PNM</h3></u>
+                <p>
+                  If the data cannot leave the memory fast enough, the alternative is to move the computation closer to where the data
+                  already is. Two families of designs have been proposed, and the difference between them is where the compute logic
+                  sits<sup class="sidenote-ref"><a href="#sn-basedie" id="sn-basedie-ref">2</a></sup>:<span class="sidenote" id="sn-basedie"><span class="sidenote-num">[2]</span>Regular DRAM has no base die. In HBM, the base die and the DRAM dies can be made in different processes. Up to HBM3E, base dies were made in the DRAM maker's own process, but starting with HBM4 they can be made in a logic process at foundries like TSMC, allowing us to put compute there.</span>
+                </p>
+                <ul>
+                  <li><strong>Processing-in-memory (PIM)</strong> puts a small processing unit next to each bank on the DRAM die. This
+                    processing unit works on the data in the row buffer without sending it over the pins. Commercial PIM-based memory products already exist, such as Samsung's
+                    <a href="https://ieeexplore.ieee.org/document/9499894">HBM-PIM</a>, SK hynix's
+                    <a href="https://ieeexplore.ieee.org/document/9731711">GDDR6-AiM</a>, Samsung's
+                    <a href="https://ieeexplore.ieee.org/document/10477465">LPDDR5-PIM</a> and
+                    <a href="https://arxiv.org/abs/2105.03814">UPMEM's PIM DIMMs</a>.</li>
+                </ul>
+
+                <p style="text-align: center; margin: 30px 0;">
+                  <img src="images/pim/pim_bank_mac.png" alt="Figure 2: PIM. A row of one bank is activated into the row buffer, and a 32 B column read sends 16 BF16 weights into the bank's processing unit. A global buffer shared by all processing units supplies 16 BF16 vector values. Sixteen multipliers feed an adder tree, whose output goes to an accumulator that keeps a running sum across column reads; only the final sum is read out to the GPU." style="max-width: 100%; height: auto;">
+                </p>
+                <p style="text-align: center; color: var(--text-muted); font-size: 14px; margin-top: -15px; margin-bottom: 30px;">
+                  <em>Figure 2: PIM: a multiply-accumulate unit next to each bank, based on SK hynix's AiM.</em>
+                </p>
+
+                <ul>
+                  <li><strong>Processing-near-memory (PNM)</strong> keeps memory and logic on separate dies that sit close together. For
+                    regular DRAM, the logic sits in a separate chip beside the memory. This could be the buffer chip on a DIMM or a controller
+                    behind a CXL link, and commercial products like Marvell's
+                    <a href="https://www.marvell.com/company/newsroom/marvell-introduces-breakthrough-structera-cxl-product-line-to-address-server-memory-bandwidth-and-capacity-challenges-in-cloud-data-centers.html">Structera A</a>
+                    already do this. In HBM, the natural place for the logic is the base die. A compute unit there (for example, a small
+                    RISC-V core or an accelerator) would send commands to the DRAM dies above it and work on the data without sending it
+                    across the interposer to the GPU. This has not shipped yet, but memory makers such as Samsung have it on their
+                    <a href="https://www.tomshardware.com/tech-industry/semiconductors/hot-chips-2026-samsung-reveals-a-three-phase-hbm-roadmap-that-puts-logic-and-compute-inside-memory-zhbm-ultimately-stacks-dram-directly-on-top-of-the-processor">HBM roadmaps</a>.</li>
+                </ul>
+
+                <p style="text-align: center; margin: 30px 0;">
+                  <img src="images/pim/pnm_base_die.png" alt="Figure 3: PNM. An HBM stack of four DRAM dies sits on a base die beside the GPU on a silicon interposer. TSVs carry data from the DRAM dies down to compute logic in the base die; the compute logic sends only its results through the base die's I/O and across the interposer to the GPU." style="max-width: 100%; height: auto;">
+                </p>
+                <p style="text-align: center; color: var(--text-muted); font-size: 14px; margin-top: -15px; margin-bottom: 30px;">
+                  <em>Figure 3: PNM: compute logic on the HBM base die.</em>
+                </p>
+
+                <u><h3>Finding the sweet spot</h3></u>
+                <div class="table-wrap">
+                  <table class="data">
+                    <thead>
+                      <tr><th>Topic</th><th>PIM</th><th>PNM</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>Where the logic sits</td><td>On the DRAM die, next to each bank</td><td>On a separate die (HBM base die, DIMM buffer chip or CXL controller)</td></tr>
+                      <tr><td>Bandwidth to the logic</td><td>Each bank's full internal bandwidth</td><td>Same as the memory's external interface</td></tr>
+                      <tr><td>Area</td><td>Takes space from the memory, so less capacity per die</td><td>Has its own die, so memory capacity is unaffected</td></tr>
+                      <tr><td>Energy</td><td>Lowest, since there is no data movement off the DRAM die</td><td>Higher than PIM, since data moves to a separate die, but lower than sending it all to the GPU</td></tr>
+                      <tr><td>Circuit complexity</td><td>Simple units (small ALUs or cores), since DRAM processes make slow, power-hungry logic</td><td>Complex logic (full cores, accelerators), built in a fast logic process</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p style="text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 12px; margin-bottom: 30px;">
+                  <em>Table 2: PIM vs. PNM</em>
+                </p>
+
+                <p>
+                  Both PIM and PNM show immense potential to overcome the memory bottleneck, since both reduce the amount of data movement. 
+                  However, they differ drastically depending on which
+                  metric you look at (Table 2). Since neither has been deployed at scale in datacenters yet, it is too early to say which
+                  one is better there. My view is that PNM is the better bet, because it strikes a balance between two important aspects:
+                </p>
+                <ul>
+                  <li><strong>Data movement and memory area.</strong> PNM only moves data as far as the base die which uses far less energy than moving to the GPU. 
+                    PIM moves even less data, but it pays in area: it puts a processing unit beside every bank, taking space away from the memory. The more
+                    area spent on logic, the more power it draws, and PIM's logic is built in a DRAM process that is less power-efficient
+                    per operation, so its compute adds power usage to the DRAM dies. PNM keeps its logic
+                    off the DRAM dies, so the memory loses no capacity. As datacenters become increasingly limited by power, this
+                    balance matters increasingly.</li>
+                  <li><strong>What the logic can do.</strong> PNM can run less complex computation than the GPU's streaming
+                    multiprocessors (SMs) because it has a smaller power budget, but it can run much more complex circuits than PIM, since its logic is built in a fast logic
+                    process.</li>
+                </ul>
+
+                <!-- Sections follow the same pattern as lwe.html, e.g.
+
+                <u><h3>Section title</h3></u>
+                <p>
+                  Text with a reference<a href="https://example.com"><sup>[1]</sup></a>.
+                </p>
+
+                Figures go in blog/images/pim/:
+
+                <p style="text-align: center; margin: 30px 0;">
+                  <img src="images/pim/figure.png" alt="Figure 1: ..." style="max-width: 100%; height: auto;">
+                </p>
+                <p style="text-align: center; color: var(--text-muted); font-size: 14px; margin-top: -15px; margin-bottom: 30px;">
+                  <em>Figure 1: ...</em>
+                </p>
+                -->
+
+                <!--
+                <hr>
+
+                <p style="color: var(--text-muted);">
+                  Acknowledgments:
+                </p>
+                <ul class="ack-list">
+                  <li><a href="https://example.com">Source</a></li>
+                </ul>
+                -->
+              </td>
+            </tr>
+          </tbody></table>
+
+        </td>
+      </tr>
+    </table>
+    <script>
+      // Clicking a sidenote number shows the note on narrow screens or highlights it on wide ones; click again to undo.
+      document.querySelectorAll('.sidenote-ref a').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+          e.preventDefault();
+          var note = document.getElementById(a.getAttribute('href').slice(1));
+          if (note) note.classList.toggle('active');
+        });
+      });
+    </script>
+  </body>
+</html>
